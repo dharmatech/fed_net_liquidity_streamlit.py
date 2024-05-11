@@ -1,7 +1,7 @@
 
 # Prerequisites
 
-    pip install pip install fed-net-liquidity
+    pip install fed-net-liquidity
 
 # Thanks
 
