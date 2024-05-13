@@ -6,7 +6,13 @@ import streamlit as st
 
 st.set_page_config(page_title='Fed Net Liquidity', page_icon=':moneybag:', layout='wide')
 
-df = fed_net_liquidity.load_dataframe()
+@st.cache_data
+def get_dataframe():
+    return fed_net_liquidity.load_dataframe()
+
+# df = fed_net_liquidity.load_dataframe()
+
+df = get_dataframe()
 
 df = df[['date', 'WALCL', 'WALCL_diff', 'RRP', 'RRP_diff', 'TGA', 'TGA_diff', 'REM', 'REM_diff', 'NL', 'NL_diff']]
 
@@ -43,6 +49,8 @@ st.dataframe(
             'diff   ':    format_billions,
             'diff    ':   format_billions
         })
-        .applymap(color_values, subset=['diff', 'diff ', 'diff  ', 'diff   ', 'diff    ']),
+        .map(color_values, subset=['diff', 'diff ', 'diff  ', 'diff   ', 'diff    ']),
     hide_index=True
 )
+
+
