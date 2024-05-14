@@ -17,3 +17,5 @@ df = get_dataframe()
 fig = plotly.express.line(df, x='date', y=['WALCL', 'RRP', 'TGA', 'REM', 'NL'], title='Fed Net Liquidity')
 
 st.plotly_chart(fig)
+
+st.button('Clear cache', on_click=get_dataframe.clear)

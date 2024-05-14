@@ -22,3 +22,5 @@ fig.add_trace(plotly.graph_objects.Bar(x=df['date'], y=df['TGA'] * -1, name='TGA
 fig.update_layout(barmode='stack', title='Fed Net Liquidity')
 
 st.plotly_chart(fig)
+
+st.button('Clear cache', on_click=get_dataframe.clear)
