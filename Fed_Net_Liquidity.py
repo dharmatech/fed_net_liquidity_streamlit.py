@@ -1,5 +1,6 @@
 import datetime
 import fed_net_liquidity
+import fed_net_liquidity.update
 import streamlit as st
 
 # st.markdown('# Fed Net Liquidity')
@@ -11,6 +12,9 @@ def get_dataframe():
     return fed_net_liquidity.load_dataframe()
 
 # df = fed_net_liquidity.load_dataframe()
+
+# fed_net_liquidity.update.update_records()
+
 
 df = get_dataframe()
 
@@ -53,4 +57,4 @@ st.dataframe(
     hide_index=True
 )
 
-
+st.button(label='Clear cache', on_click=get_dataframe.clear)
