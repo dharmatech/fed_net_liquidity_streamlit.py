@@ -55,3 +55,5 @@ col_2.write('### Withdrawals')
 # st.dataframe(get_rows_for_date_and_type(df, date, 'Withdrawals'), hide_index=True)
 
 col_2.dataframe(get_rows_for_date_and_type(df, date, 'Withdrawals'), hide_index=True)
+
+st.button('Clear cache', on_click=get_dataframe.clear)
