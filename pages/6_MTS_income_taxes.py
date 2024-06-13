@@ -116,6 +116,8 @@ fig = px.line(tmp, x='record_date', y=['current_fytd_net_rcpt_amt', 'prior_fytd_
 
 st.plotly_chart(fig, use_container_width=True)
 
+st.button('Clear cache', on_click=load_dataframe.clear)
+
 # ----------------------------------------------------------------------
 
 # df.drop(columns=colunns_to_exclude + ['current_month_gross_rcpt_amt', 'current_month_refund_amt', 'current_fytd_gross_rcpt_amt', 'current_fytd_refund_amt', 'prior_fytd_gross_rcpt_amt', 'prior_fytd_refund_amt'])
