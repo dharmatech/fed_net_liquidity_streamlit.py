@@ -36,7 +36,7 @@ melted = pivot.reset_index().melt(id_vars='record_date_', var_name='year', value
 
 melted = melted.dropna()
 
-fig = px.line(melted, x='record_date_', y=amount_type, color='year', title='Daily Transaction Amounts by Year')
+fig = px.line(melted, x='record_date_', y=amount_type, color='year', title='TGA Deposits : Taxes')
 
 fig.update_xaxes(tickformat='%b %d')
 
