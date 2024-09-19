@@ -59,5 +59,10 @@ st.markdown('## Categories in dataset')
 
 st.dataframe(pd.DataFrame(tmp['transaction_catg'].unique()))
 
+md = """
+Source code for this page:
 
+https://github.com/dharmatech/tga_taxes.py/blob/main/tga_taxes_year_compare_streamlit.py
+"""
 
+st.markdown(md)
