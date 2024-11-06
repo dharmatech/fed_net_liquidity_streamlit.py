@@ -5,6 +5,8 @@ import streamlit as st
 import plotly
 import plotly.express
 
+import yfinance_download
+
 # @st.cache_data
 def get_dataframe():
     return treasury_gov_pandas.load_records('https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/od/auctions_query', lookback=10, update=False)
@@ -59,8 +61,54 @@ def build_pivot():
 
 pivot_df = build_pivot()
 
-fig = plotly.express.bar(pivot_df, x=pivot_df.index, y=pivot_df.columns, title='Treasury Securities Net Issuance', labels={'value': 'change', 'date': 'date'}, width=1000, height=600)
+if st.sidebar.checkbox('Cumulative'):
+
+    pivot_df = pivot_df.cumsum()
+
+chart_type = st.sidebar.radio('Chart Type', ['Bar', 'Line'])
+
+if chart_type == 'Bar':
+
+    fig = plotly.express.bar(
+        data_frame=pivot_df, x=pivot_df.index, y=pivot_df.columns, 
+        title='Treasury Securities Net Issuance', labels={'value': 'change', 'date': 'date'}, width=1000, height=600)
+
+elif chart_type == 'Line':
+
+    fig = plotly.express.line(
+        data_frame=pivot_df, x=pivot_df.index, y=pivot_df.columns, 
+        title='Treasury Securities Net Issuance', labels={'value': 'change', 'date': 'date'}, width=1000, height=600)
+# ----------------------------------------------------------------------
+@st.cache_data
+def get_spx():
+    return yfinance_download.load_records(symbol='^GSPC', update=False)
+
+import plotly.graph_objects as go
+
+if st.sidebar.checkbox('SPX'):
+
+    spx = get_spx() 
+
+    spx = spx[['Close']]
+
+    fig.add_trace(
+        trace=go.Scatter(x=spx.index, y=spx['Close'], mode='lines', name='SPX', yaxis='y2', line=dict(color='black'))
+    )
+
+    fig.update_layout(
+        yaxis2=dict(
+            title='SPX',
+            titlefont=dict(
+                color='rgb(148, 103, 189)'
+            ),
+            tickfont=dict(
+                color='rgb(148, 103, 189)'
+            ),
+            overlaying='y',
+            side='right'
+        ))
 
 st.plotly_chart(fig)
 
 st.button('Clear cache', on_click=build_pivot.clear)
+
