@@ -14,3 +14,7 @@ Copy-Item `
 Copy-Item `
     ..\tga_explorer.py\tga_explorer.py `
     .\pages\4_TGA_Explorer.py
+
+Copy-Item `
+    ..\fed_balance_sheet_chart.py\fed_balance_sheet_chart.py `
+    .\pages\7_Fed_Balance_Sheet.py
