@@ -3,7 +3,6 @@ import pandas as pd
 import fred_pandas
 import streamlit as st
 import plotly.graph_objects as go
-
 # ----------------------------------------------------------------------
 assets = {
     "WGCAL": 'Gold Certificate Account',
@@ -51,17 +50,11 @@ if __name__ == '__main__':
             fred_pandas.load_records(series=elt, update=True)
         exit()
 # ----------------------------------------------------------------------
-
-
 @st.cache_data
 def setup_dataframe():
 
     tbl = {}
-
-    # for series in assets.keys():
-    #     tbl[series] = fred_pandas.load_records(series=series, update=False)
-
-
+    
     for series in series_items:
         tbl[series] = fred_pandas.load_records(series=series, update=False)
 
@@ -77,28 +70,40 @@ def setup_dataframe():
     for b in ls[1:]:
         a = a.merge(b, on='date')
 
-
-
-    # convert all values to numeric
-
     for series in a.columns[1:]:
         # a[series] = pd.to_numeric(a[series], errors='coerce')
         a[series] = pd.to_numeric(a[series])
 
-        
-
-
-
-    # a
-
     for series in liabilities.keys():
         a[series] = a[series] * -1
 
-
-    # a[['date', 'WLFN']]
-
     return a
 
+# ----------------------------------------------------------------------
+@st.cache_data
+def setup_diff_dataframe():
+
+    tbl = {}
+    
+    for series in series_items:
+        tbl[series] = fred_pandas.load_records(series=series, update=False)
+
+    for series, df in tbl.items():
+        df.rename(columns={'value': series}, inplace=True)
+        df.drop(columns='realtime_start',    inplace=True)
+        df.drop(columns='realtime_end',      inplace=True)
+
+    ls = list(tbl.values())
+
+    a = ls[0]
+
+    for b in ls[1:]:
+        a = a.merge(b, on='date')
+
+    for series in a.columns[1:]:
+        a[series] = pd.to_numeric(a[series])
+
+    return a
 # ----------------------------------------------------------------------
 
 a = setup_dataframe()
@@ -118,21 +123,10 @@ if st.sidebar.checkbox('Remove series larger than'):
             print(f'Removing {column}')
             a = a.drop(columns=[column])
 
-# Create a Plotly figure
+# ----------------------------------------------------------------------
+st.write('# Federal Reserve Balance Sheet')
+
 fig = go.Figure()
-
-# Add a bar to the figure for each series in your DataFrame
-# for column in a.columns[1:]:
-#     fig.add_trace(go.Bar(x=a['date'], y=a[column], name=column))
-
-# for column in a.columns[1:]:
-#     name = f'{column} - {assets[column]}'
-#     fig.add_trace(go.Bar(x=a['date'], y=a[column], name=name))
-
-# for column in a.columns[1:]:
-#     name = f'{column} - {all_items[column]}'
-#     # name = column
-#     fig.add_trace(go.Bar(x=a['date'], y=a[column], name=name, hovertemplate = '<b>'+name+'</b><br>Date: %{x}<br>Value: %{y}<extra></extra>'))
 
 for column in a.columns[1:]:
 
@@ -143,15 +137,62 @@ for column in a.columns[1:]:
     else:
         name = f'{column} - {all_items[column]}'
 
-    # name = f'{column} - {all_items[column]}'
-    # name = column
     fig.add_trace(go.Bar(x=a['date'], y=a[column], name=name, hovertemplate = '<b>'+name+'</b><br>Date: %{x}<br>Value: %{y}<extra></extra>'))
 
 fig.update_layout(barmode='relative', width=1000, height=600)
 
-
-st.write('# Federal Reserve Balance Sheet')
-
 st.plotly_chart(fig)
 
-st.button('Clear cache', on_click=setup_dataframe.clear)
+def clear_cache():
+    setup_dataframe.clear()
+    setup_diff_dataframe.clear()
+
+# st.sidebar.button('Clear cache', on_click=setup_dataframe.clear)
+
+st.sidebar.button('Clear cache', on_click=clear_cache)
+
+# ----------------------------------------------------------------------
+st.write('### Changes for week')
+
+df_diff = setup_diff_dataframe()
+
+df_diff = df_diff.set_index('date').diff().reset_index()
+
+selected_date = st.selectbox('date', df_diff['date'].sort_values(ascending=False))
+
+row = df_diff[df_diff['date'] == selected_date]
+
+last_row = row.iloc[-1]
+
+fig = go.Figure()
+
+bar_names = [f'{col} : {all_items.get(col, col)}' for col in last_row.index[1:]]
+
+assets_ = list(assets.keys())
+liabilities_ = list(liabilities.keys())
+
+import plotly.colors as pc
+
+asset_color     = pc.qualitative.Plotly[2]
+liability_color = pc.qualitative.Plotly[1]
+
+colors = [asset_color if col in assets_ else liability_color if col in liabilities_ else 'blue' for col in last_row.index[1:]]
+
+fig.add_trace(go.Bar(
+    x=last_row.index[1:],   # Exclude the 'date' column
+    y=last_row.values[1:],  # Exclude the 'date' value
+    name='Last Row Values',
+    text=bar_names,
+    hoverinfo='text+y',
+    marker_color=colors
+))
+
+fig.update_layout(
+    title=f'Changes on {selected_date}',
+    xaxis_title='Columns',
+    yaxis_title='Values',
+    xaxis_tickangle=-45
+)
+
+st.plotly_chart(fig)
+# ----------------------------------------------------------------------
