@@ -34,6 +34,18 @@ st.write('Deposits and Withdrawals of Operating Cash (TGA)')
 
 metric = st.sidebar.selectbox(label='Metrics', options=['transaction_today_amt', 'transaction_mtd_amt', 'transaction_fytd_amt'], index=2)
 
+if st.sidebar.checkbox('Filter', value=False):
+
+    categories = st.sidebar.multiselect(label='transaction_catg', options=df['transaction_catg'].unique())
+    
+    df = df[df['transaction_catg'].isin(categories)]
+
+if st.sidebar.checkbox('Deposits', value=True) == False:
+    df = df.query('transaction_type != "Deposits"')
+
+if st.sidebar.checkbox('Withdrawals', value=True) == False:
+    df = df.query('transaction_type != "Withdrawals"')
+
 if st.sidebar.checkbox('Public debt', value=False) == False:
     df = df.query('not transaction_catg.str.contains("public debt", case=False)', engine='python')
 
@@ -60,18 +72,15 @@ df = df.query(f'abs > {min_amount}')
 
 st.sidebar.write(f'Total records: {len(df):,}')
 
-if st.sidebar.checkbox('Filter', value=False):
 
-    categories = st.sidebar.multiselect(label='transaction_catg', options=df['transaction_catg'].unique())
-    
-    df = df[df['transaction_catg'].isin(categories)]
+# df['transaction_fytd_amt'] = df['transaction_fytd_amt'] * 1_000_000
 
 fig = px.bar(
     df, 
     x='record_date', 
     y=metric, 
     color='transaction_catg', 
-    title='Stacked Bar Chart', 
+    # title='Stacked Bar Chart', 
     labels={metric:'Transaction Amount', 'record_date':'Record Date', 'transaction_catg':'Transaction Category'},
     barmode='relative')
 
