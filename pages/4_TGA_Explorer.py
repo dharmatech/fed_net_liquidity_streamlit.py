@@ -86,4 +86,6 @@ fig = px.bar(
 
 st.plotly_chart(fig, use_container_width=True)
 
-st.button(label='Clear Cache', on_click= lambda: load_dataframe.clear())
+st.sidebar.button(label='Clear Cache', on_click= lambda: load_dataframe.clear())
+
+st.sidebar.markdown('[source code](https://github.com/dharmatech/tga_explorer.py)')
