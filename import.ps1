@@ -22,3 +22,7 @@ Copy-Item `
 Copy-Item `
     ..\fed_balance_sheet_chart.py\fed_balance_sheet_chart.py `
     .\pages\7_Fed_Balance_Sheet.py
+
+Copy-Item `
+    ..\tga_top_streamlit.py\tga_top_streamlit.py `
+    .\pages\4_TGA_Top.py
