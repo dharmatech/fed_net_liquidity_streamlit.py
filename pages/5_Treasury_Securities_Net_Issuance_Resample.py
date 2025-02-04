@@ -73,6 +73,14 @@ pivot_df = build_pivot()
 
 pivot_df = pivot_df.resample(group_by).sum()
 
+if group_by == 'ME':
+
+    pivot_df = pivot_df.reset_index()
+
+    pivot_df['date'] = pivot_df['date'].dt.to_period('M').dt.to_timestamp()
+
+    pivot_df = pivot_df.set_index('date')
+
 fig = plotly.express.bar(pivot_df, x=pivot_df.index, y=pivot_df.columns, title='Treasury Securities Net Issuance', 
                          labels={'value': 'change', 'date': 'date'}
                         #  width=1000, 
