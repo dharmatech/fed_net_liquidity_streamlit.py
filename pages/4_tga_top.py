@@ -126,9 +126,16 @@ tmp = tmp[tmp['transaction_catg'].str.contains(pat='Public Debt Cash Redemp', ca
 
 # tmp[tmp['transaction_catg'].str.contains(pat='HHS', case=True)]['transaction_catg'] = 'HHS'
 
-tmp.loc[tmp['transaction_catg'].str.contains(pat='HHS',  case=True), 'transaction_catg'] = 'HHS'
-tmp.loc[tmp['transaction_catg'].str.contains(pat='USDA', case=True), 'transaction_catg'] = 'USDA'
-tmp.loc[tmp['transaction_catg'].str.contains(pat='DoD',  case=True), 'transaction_catg'] = 'DoD'
+tmp.loc[tmp['transaction_catg'].str.contains(pat='HHS',   case=True), 'transaction_catg'] = 'HHS'
+tmp.loc[tmp['transaction_catg'].str.contains(pat='USDA',  case=True), 'transaction_catg'] = 'USDA'
+tmp.loc[tmp['transaction_catg'].str.contains(pat='DoD',   case=True), 'transaction_catg'] = 'DoD'
+tmp.loc[tmp['transaction_catg'].str.contains(pat='SSA',   case=True), 'transaction_catg'] = 'SSA'
+tmp.loc[tmp['transaction_catg'].str.contains(pat='VA',    case=True), 'transaction_catg'] = 'VA'
+tmp.loc[tmp['transaction_catg'].str.contains(pat='OPM',   case=True), 'transaction_catg'] = 'OPM'
+tmp.loc[tmp['transaction_catg'].str.contains(pat='TREAS', case=True), 'transaction_catg'] = 'TREAS'
+tmp.loc[tmp['transaction_catg'].str.contains(pat='DOT',   case=True), 'transaction_catg'] = 'DOT'
+tmp.loc[tmp['transaction_catg'].str.contains(pat='DHS',   case=True), 'transaction_catg'] = 'DHS'
+tmp.loc[tmp['transaction_catg'].str.contains(pat='DOL',   case=True), 'transaction_catg'] = 'DOL'
 
 
 tmp.sort_values(by='transaction_fytd_amt', ascending=False).head(10)
