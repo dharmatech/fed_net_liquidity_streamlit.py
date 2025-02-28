@@ -10,13 +10,32 @@ def load_dataframe():
 
 df = load_dataframe()
 
+# ----------------------------------------------------------------------
 df['record_date'] = pd.to_datetime(df['record_date'])
 
 df['transaction_today_amt'] = pd.to_numeric(df['transaction_today_amt'], errors='coerce')
 df['transaction_mtd_amt']   = pd.to_numeric(df['transaction_mtd_amt'],   errors='coerce')
 df['transaction_fytd_amt']  = pd.to_numeric(df['transaction_fytd_amt'],  errors='coerce')
+# ----------------------------------------------------------------------
 
-df = df.query('transaction_catg != "null"')
+# drop_columns = [
+#     # 'transaction_catg_desc',
+#     # 'account_type',
+#     'record_calendar_quarter',
+#     'record_calendar_year', 'record_calendar_month', 'record_calendar_day', 'src_line_nbr', 'record_fiscal_year', 'record_fiscal_quarter',
+#     'table_nbr', 'table_nm']
+
+# tmp = df.copy(deep=True)
+
+# tmp = tmp[tmp['record_date'] == '2025-02-26']
+
+# tmp = tmp[tmp['transaction_type'] == 'Withdrawals']
+
+# tmp.sort_values('transaction_fytd_amt').drop(columns=drop_columns).drop(columns=['account_type'])
+
+# tmp.drop(columns=drop_columns)
+# ----------------------------------------------------------------------
+# df = df.query('transaction_catg != "null"')
 
 df = df.query('transaction_catg != "Sub-Total Withdrawals"')
 
@@ -28,7 +47,7 @@ df = df.query('transaction_catg != "Transfers to Depositaries"')
 df = df.query('transaction_catg != "Transfers to Federal Reserve Account (Table V)"')
 df = df.query('transaction_catg != "ShTransfersCtohFederalmReserve Account (Table V)"')
 df = df.query('transaction_catg != "Transfers to Depositaries"')
-
+# ----------------------------------------------------------------------
 st.write('# Daily Treasury Statement')
 st.write('Deposits and Withdrawals of Operating Cash (TGA)')
 st.write('Year Comparison')
