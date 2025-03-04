@@ -11,6 +11,7 @@ Copy-Item `
     ..\tga_taxes.py\tga_taxes_year_compare_streamlit.py `
     .\pages\6_TGA_Taxes_Year_Compare.py
 
+    
 Copy-Item `
     ..\tga_explorer.py\tga_explorer.py `
     .\pages\4_TGA_Explorer.py
@@ -18,6 +19,11 @@ Copy-Item `
 Copy-Item `
     ..\tga_explorer.py\tga_explorer_year_compare.py `
     .\pages\4_TGA_Explorer_Year_Compare.py    
+
+Copy-Item `
+    ..\tga_explorer.py\tga_explorer_diff.py `
+    .\pages\4_TGA_Explorer_Diff.py
+
 
 Copy-Item `
     ..\fed_balance_sheet_chart.py\fed_balance_sheet_chart.py `
