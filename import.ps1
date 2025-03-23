@@ -24,6 +24,9 @@ Copy-Item `
     ..\tga_explorer.py\tga_explorer_diff.py `
     .\pages\4_TGA_Explorer_Diff.py
 
+Copy-Item `
+    ..\tga_explorer.py\tga_explorer_net.py `
+    .\pages\5_TGA_Explorer_Net.py
 
 Copy-Item `
     ..\fed_balance_sheet_chart.py\fed_balance_sheet_chart.py `
